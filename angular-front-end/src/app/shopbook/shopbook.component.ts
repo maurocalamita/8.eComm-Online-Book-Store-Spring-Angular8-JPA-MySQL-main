@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClientService } from '../service/http-client.service';
 import { Book } from '../model/Book';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-shopbook',
@@ -12,72 +13,67 @@ export class ShopbookComponent implements OnInit {
 
   books: Array<Book>;
   booksRecieved: Array<Book>;
+  quantityForm: FormGroup;
 
-  cartBooks: any;
+  cartBooks: { id: number, name: string, price: number, quantity: number, retrievedImage: string }[] = [];
 
-  constructor(private router: Router, private httpClientService: HttpClientService) { }
-
+  constructor(
+    private router: Router,
+    private httpClientService: HttpClientService,
+    private fb: FormBuilder
+  ) {
+    this.quantityForm = this.fb.group({
+      quantity: [1] // Imposta il valore predefinito a 1
+    });
+  }
 
   ngOnInit() {
     this.httpClientService.getBooks().subscribe(
       response => this.handleSuccessfulResponse(response),
     );
-    //from localstorage retrieve the cart item
-    let data = localStorage.getItem('cart');
-    //if this is not null convert it to JSON else initialize it as empty
-    if (data !== null) {
+    this.loadCart();
+  }
+
+  loadCart() {
+    const data = localStorage.getItem('cart');
+    if (data) {
       this.cartBooks = JSON.parse(data);
-    } else {
-      this.cartBooks = [];
     }
   }
 
-  // we will be taking the books response returned from the database
-  // and we will be adding the retrieved   
   handleSuccessfulResponse(response) {
-    this.books = new Array<Book>();
-    //get books returned by the api call
-    this.booksRecieved = response;
-    for (const book of this.booksRecieved) {
+    this.books = response.map(book => ({
+      ...book,
+      retrievedImage: 'data:image/jpeg;base64,' + book.picByte
+    }));
+  }
 
-      const bookwithRetrievedImageField = new Book();
-      bookwithRetrievedImageField.id = book.id;
-      bookwithRetrievedImageField.name = book.name;
-      //populate retrieved image field so that book image can be displayed
-      bookwithRetrievedImageField.retrievedImage = 'data:image/jpeg;base64,' + book.picByte;
-      bookwithRetrievedImageField.author = book.author;
-      bookwithRetrievedImageField.price = book.price;
-      bookwithRetrievedImageField.picByte = book.picByte;
-      this.books.push(bookwithRetrievedImageField);
+  addToCart(bookId: number) {
+    const book = this.books.find(book => book.id === bookId);
+    if (book) {
+      const quantity = this.quantityForm.get('quantity').value;
+
+      const existingItem = this.cartBooks.find(item => item.id === book.id);
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        this.cartBooks.push({
+          id: book.id,
+          name: book.name,
+          price: book.price,
+          quantity: quantity,
+          retrievedImage: book.retrievedImage
+        });
+      }
+
+      this.updateCartData();
+      this.quantityForm.reset({ quantity: 1 });
+      book.isAdded = true;
     }
   }
 
-  addToCart(bookId) {
-    //retrieve book from books array using the book id
-    let book = this.books.find(book => {
-      return book.id === +bookId;
-    });
-    let cartData = [];
-    //retrieve cart data from localstorage
-    let data = localStorage.getItem('cart');
-    console.log(data);
-    //prse it to json 
-    if (data !== null) {
-      cartData = JSON.parse(data);
-    }
-    console.log('hii');
-    // add the selected book to cart data
-    cartData.push(book);
-    //updated the cartBooks
-    this.updateCartData(cartData);
-    //save the updated cart data in localstorage
-    localStorage.setItem('cart', JSON.stringify(cartData));
-    //make the isAdded field of the book added to cart as true
-    book.isAdded = true;
-  }
-
-  updateCartData(cartData) {
-    this.cartBooks = cartData;
+  updateCartData() {
+    localStorage.setItem('cart', JSON.stringify(this.cartBooks));
   }
 
   goToCart() {
@@ -86,7 +82,15 @@ export class ShopbookComponent implements OnInit {
 
   emptyCart() {
     this.cartBooks = [];
-    localStorage.clear();
+    this.updateCartData();
   }
 
+  removeFromCart(bookId: number) {
+    this.cartBooks = this.cartBooks.filter(item => item.id !== bookId);
+    this.updateCartData();
+  }
+
+  getTotalPrice(): number {
+    return this.cartBooks.reduce((total, item) => total + (item.price * item.quantity), 0);
+  }
 }
