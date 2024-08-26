@@ -1,5 +1,7 @@
 package com.javainuse.model;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -61,5 +63,16 @@ public class Book {
 
 	public void setPicByte(byte[] picByte) {
 		this.picByte = picByte;
+	}
+	
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+	private Set<BookUser> bookUsers;
+
+	public Set<BookUser> getBookUsers() {
+		return bookUsers;
+	}
+
+	public void setBookUsers(Set<BookUser> bookUsers) {
+		this.bookUsers = bookUsers;
 	}
 }

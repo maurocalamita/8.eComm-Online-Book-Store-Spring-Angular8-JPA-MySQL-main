@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClientService } from '../service/http-client.service';
 import { Book } from '../model/Book';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup , Validators } from '@angular/forms';
+import { FeedBack } from '../model/feedback';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-shopbook',
@@ -14,8 +16,16 @@ export class ShopbookComponent implements OnInit {
   books: Array<Book>;
   booksRecieved: Array<Book>;
   quantityForm: FormGroup;
-
+  myForm: FormGroup;
+  searchTerm: string;
+  feedback = new FeedBack("", "");
+  totalBooks: number = 0;
+  pagination: number = 0;
+  productPage: number = 4;
+  sortField: string = "name"
+  sortOrder: string = 'desc';
   cartBooks: { id: number, name: string, price: number, quantity: number, retrievedImage: string }[] = [];
+  isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -25,13 +35,48 @@ export class ShopbookComponent implements OnInit {
     this.quantityForm = this.fb.group({
       quantity: [1] // Imposta il valore predefinito a 1
     });
+
+    this.myForm = this.fb.group({
+      searchTerm: ['', Validators.required]
+    });
   }
 
   ngOnInit() {
-    this.httpClientService.getBooks().subscribe(
-      response => this.handleSuccessfulResponse(response),
-    );
+   
+    this.getAllBooks();
+
     this.loadCart();
+  }
+
+  getAllBooks() {
+    this.isLoading = true;
+    let params = new HttpParams()
+      .set('page', String(this.pagination))
+      .set('size', String(this.productPage))
+      .set('sort', this.sortField)
+      .set('order', this.sortOrder);
+
+    this.httpClientService.getBooks(params).subscribe({
+      next: (response: any) => {
+        const data = response;
+        if (data.books && data.books.length !== 0) {
+          this.books = data.books.map(book => ({
+            ...book,
+            retrievedImage: 'data:image/jpeg;base64,' + book.picByte
+          }));
+          this.totalBooks = data.totalItems;
+        } else {
+          this.books = [];
+          this.totalBooks = 0;
+        }
+      },
+      error: (err: any) => {
+        console.log('Error during fetching books:', err);
+      },
+      complete: () => {
+        console.log('Fetch books complete');
+      }
+    });
   }
 
   loadCart() {
@@ -93,4 +138,43 @@ export class ShopbookComponent implements OnInit {
   getTotalPrice(): number {
     return this.cartBooks.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
+
+  onSearch() {
+    this.isLoading = false;
+    const searchTerm = this.myForm.get('searchTerm').value;
+   
+      this.httpClientService.searchProducts(searchTerm).subscribe({
+        next: (data: Book[]) => {
+          this.books = data.map(book => ({
+            ...book,
+            retrievedImage: 'data:image/jpeg;base64,' + book.picByte
+          }));
+        },
+        error: (err: any) => {
+          console.log('Error during search:', err);
+        },
+        complete: () => {
+          console.log('Search complete');
+        },
+      });
+    
+  }
+
+  onReset() {
+    this.isLoading = true;
+    // Resetta il campo di ricerca nel form
+    this.myForm.reset();
+  
+    // Reimposta il termine di ricerca (opzionale)
+    this.searchTerm = '';
+  
+    // Ricarica tutti i libri
+   this.getAllBooks();
+  }
+  
+  renderPage(event: number) {
+    this.pagination = event - 1;
+    this.getAllBooks();
+}
+  
 }

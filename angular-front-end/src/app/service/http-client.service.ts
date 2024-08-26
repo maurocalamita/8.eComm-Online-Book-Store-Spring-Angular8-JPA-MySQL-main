@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { User } from '../model/User ';
 import { Book } from '../model/Book';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,8 @@ export class HttpClientService {
     return this.httpClient.delete<User>('http://localhost:8080/users/' + id);
   }
 
-  getBooks() {
-    return this.httpClient.get<Book[]>('http://localhost:8080/books/get');
+  getBooks(params:any) {
+    return this.httpClient.get<Book[]>('http://localhost:8080/books/get', {params});
   }
 
   addBook(newBook: Book) {
@@ -40,5 +41,11 @@ export class HttpClientService {
 
   updateBook(updatedBook: Book) {
     return this.httpClient.put<Book>('http://localhost:8080/books/update', updatedBook);
+  }
+
+  searchProducts(searchTerm: string): Observable<Book[]> {
+    // Eseguire la richiesta HTTP GET con i parametri di query
+    return this.httpClient.get<Book[]>(`http://localhost:8080/books/search?query=${searchTerm}`)
+     
   }
 }

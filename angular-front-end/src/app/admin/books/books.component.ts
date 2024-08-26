@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/model/Book';
 import { HttpClientService } from 'src/app/service/http-client.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-books',
@@ -24,7 +25,13 @@ export class BooksComponent implements OnInit {
   }
 
   refreshData() {
-    this.httpClientService.getBooks().subscribe(
+    const params = {
+      page: 0,
+      size: 10,
+      sort: 'id',
+      order: 'DESC'
+    };
+    this.httpClientService.getBooks(params).subscribe(
       response => this.handleSuccessfulResponse(response)
     );
     this.activedRoute.queryParams.subscribe(

@@ -1,3 +1,13 @@
+<h2>SEARCH</h2>
+<form [formGroup]="myForm" (ngSubmit)="onSearch()">
+    <div>
+      <label for="searchTerm">Name or Author:</label>
+      <input id="searchTerm" formControlName="searchTerm" />
+    </div>
+    <button type="submit" class="btn btn-primary" (click)="onSearch()">Search</button>
+    <button type="button" class="btn btn-danger" (click)="onReset()">Reset</button>
+  </form>
+
 <div class="container row">
     <div class="col-md-2">
         <h1>Books</h1>
@@ -42,7 +52,7 @@
 </div>
 
 <div class="container row">
-    <div class="col-md-4" *ngFor="let book of books; let i = index">
+    <div class="col-md-4" *ngFor="let book of books | paginate: { itemsPerPage: productPage, currentPage: pagination + 1, totalItems: totalBooks }; let i = index">
         <div class="card card-block" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 20px;">
             <img [src]="book.retrievedImage" height="300" width="200" style="margin: 10px auto;">
             <div style="text-align: center; flex-grow: 1;">
@@ -60,4 +70,9 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Pagination controls -->
+<div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
+    <pagination-controls (pageChange)="renderPage($event)"></pagination-controls>
 </div>

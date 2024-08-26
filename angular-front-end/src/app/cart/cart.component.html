@@ -1,0 +1,47 @@
+<div *ngIf="feedback.feedbackType === 'success'" class="alert alert-success d-flex align-items-center"
+          role="alert">
+          <div><img src="assets/img/check.png" alt="check" class="ms-2" style="width: 30px; height: auto;"></div>
+          <span>{{ feedback.feedbackmsg }}</span>
+      </div>
+
+<div class="cart-container">
+    <h2>Your Cart</h2>
+
+    <div *ngIf="cartBooks.length > 0; else emptyCartMessage">
+        <table border="2" cellspacing="2" cellpadding="8" style="width: 100%; text-align: left;">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Book Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let book of cartBooks">
+                    <td style="width: 10%;">
+                        <img [src]="book.retrievedImage" alt="{{ book.name }}" style="width: 60px; height: auto;">
+                    </td>
+                    <td style="width: 40%;">{{ book.name }}</td>
+                    <td style="width: 15%;">{{ book.price | currency }}</td>
+                    <td style="width: 15%;">{{ book.quantity }}</td>
+                    <td style="width: 20%;">
+                        <button (click)="removeFromCart(book.id)">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 20px; text-align: right;">
+            <h3>Total: {{ getTotalPrice() | currency }}</h3>
+            <button *ngIf="!paymentInProgress" (click)="proceedToCheckout()">Proceed to Checkout</button>
+            <button (click)="emptyCart()">Empty Cart</button>
+            <button (click)="continueShopping()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <ng-template #emptyCartMessage>
+        <p>Your cart is empty. <a (click)="continueShopping()">Continue Shopping</a></p>
+    </ng-template>
+</div>

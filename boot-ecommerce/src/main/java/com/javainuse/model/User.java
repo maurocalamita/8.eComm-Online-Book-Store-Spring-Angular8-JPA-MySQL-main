@@ -1,10 +1,14 @@
 package com.javainuse.model;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -55,6 +59,17 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<BookUser> bookUsers;
+	
+	public Set<BookUser> getBookUsers() {
+		return bookUsers;
+	}
+
+	public void setBookUsers(Set<BookUser> bookUsers) {
+		this.bookUsers = bookUsers;
 	}
 
 }

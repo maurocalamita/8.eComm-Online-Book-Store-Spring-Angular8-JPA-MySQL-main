@@ -1,9 +1,17 @@
 package com.javainuse.controller;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +37,29 @@ public class BookController {
 	@Autowired
 	private BookRepository bookRepository;
 	
-	@GetMapping("/get")
-	public List<Book> getBooks() {
-		return bookRepository.findAll();
-	}
+	@GetMapping("/get" )
+    public ResponseEntity<Object> getBooks(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "4") int size,
+            @RequestParam(name = "sort", required = false, defaultValue = "id") String sort,
+            @RequestParam(name = "order", required = false, defaultValue = "DESC") String order) {
+
+        Sort.Direction sortDirection = "DESC".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        Page<Book> pageResult = bookRepository.findAll(pageable);
+
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        if (pageResult.hasContent()) {
+            responseBody.put("books", pageResult.getContent());
+            responseBody.put("currentPage", pageResult.getNumber());
+            responseBody.put("totalItems", pageResult.getTotalElements());
+            responseBody.put("totalPages", pageResult.getTotalPages());
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        } else {
+            responseBody.put("message", "No books found");
+            return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+        }
+    }
 	
 	@PostMapping("/upload")
 	public void uploadImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
@@ -58,4 +85,21 @@ public class BookController {
 	public void updateBook(@RequestBody Book book) {
 		bookRepository.save(book);
 	}
+	
+	@GetMapping("/search")
+    public List<Book> searchBooks(@RequestParam("query") String query) {
+        // Cerca per query parziale in nome o autore
+        return bookRepository.findByNameOrAuthor(query);
+    }
+	//INTERSEZIONE
+	 /*@PostMapping("/{orderId}/books/{bookId}")
+	    public ResponseEntity<String> addBookToOrder(
+	            @PathVariable Long orderId,
+	            @PathVariable Long bookId,
+	            @RequestParam Integer quantity) {
+
+	        orderBookService.addBookToOrder(orderId, bookId, quantity);
+	        return ResponseEntity.ok("Product added to order successfully");
+	    }
+	    */
 }

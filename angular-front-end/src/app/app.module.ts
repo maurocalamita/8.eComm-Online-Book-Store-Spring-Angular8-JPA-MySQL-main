@@ -14,6 +14,8 @@ import { AddbookComponent } from './admin/books/addbook/addbook.component';
 import { ViewbookComponent } from './admin/books/viewbook/viewbook.component';
 import { ShopbookComponent } from './shopbook/shopbook.component';
 import { ErrorComponent } from './error/error.component';
+import { CartComponent } from './cart/cart.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -26,14 +28,16 @@ import { ErrorComponent } from './error/error.component';
     AddbookComponent,
     ViewbookComponent,
     ShopbookComponent,
-    ErrorComponent
+    ErrorComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]
