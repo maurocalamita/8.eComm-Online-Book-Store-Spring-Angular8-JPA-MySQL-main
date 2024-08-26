@@ -72,7 +72,7 @@
     </div>
 </div>
 
-<!-- Pagination controls -->
+<!-- Pagination controls  e isLoading serve per non far vedere la pagination quando faccio la ricerca per autore o titolo libro-->  
 <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
     <pagination-controls (pageChange)="renderPage($event)"></pagination-controls>
 </div>
