@@ -17,6 +17,7 @@ import { ErrorComponent } from './error/error.component';
 import { CartComponent } from './cart/cart.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 
+
 @NgModule({
   declarations: [
     AppComponent,

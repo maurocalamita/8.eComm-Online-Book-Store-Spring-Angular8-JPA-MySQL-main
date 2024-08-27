@@ -48,4 +48,9 @@ export class HttpClientService {
     return this.httpClient.get<Book[]>(`http://localhost:8080/books/search?query=${searchTerm}`)
      
   }
+
+  addBookUser(userId, bookId, quantity) {
+    const headers = { 'content-type': 'application/json' }
+    return this.httpClient.post<any>(`http://localhost:8080/user-books/add?userId=${userId}&bookId=${bookId}&quantity=${quantity}`, {headers});   
+  }
 }

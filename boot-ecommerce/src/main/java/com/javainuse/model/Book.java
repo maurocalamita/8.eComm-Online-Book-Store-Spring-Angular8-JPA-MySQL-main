@@ -65,14 +65,5 @@ public class Book {
 		this.picByte = picByte;
 	}
 	
-	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-	private Set<BookUser> bookUsers;
-
-	public Set<BookUser> getBookUsers() {
-		return bookUsers;
-	}
-
-	public void setBookUsers(Set<BookUser> bookUsers) {
-		this.bookUsers = bookUsers;
-	}
+	
 }
