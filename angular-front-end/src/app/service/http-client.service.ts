@@ -53,4 +53,8 @@ export class HttpClientService {
     const headers = { 'content-type': 'application/json' }
     return this.httpClient.post<any>(`http://localhost:8080/user-books/add?userId=${userId}&bookId=${bookId}&quantity=${quantity}`, {headers});   
   }
+
+  getType(): Observable<any[]> {
+    return this.httpClient.get<any[]>(`http://localhost:8080/type/get`);
+  }
 }

@@ -1,8 +1,8 @@
 package com.javainuse.db;
 
-import com.javainuse.model.BookUser;
+import com.javainuse.model.OrderBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookUserRepository extends JpaRepository<BookUser, Long> {
+public interface OrderBookRepository extends JpaRepository<OrderBook, Long> {
     
 }

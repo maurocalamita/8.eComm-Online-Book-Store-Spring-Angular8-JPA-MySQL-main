@@ -3,22 +3,25 @@ package com.javainuse.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "user_book")
-public class BookUser {
+@Table(name = "order_book")
+public class OrderBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "order_id", nullable = false)
+    private Long orderId;
 
     @Column(name = "book_id", nullable = false)
     private Long bookId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+    
+    @Column(name = "price", nullable = false)
+    private Double price;
 
     // Getters and Setters
     public Long getId() {
@@ -29,12 +32,12 @@ public class BookUser {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
     
     public Long getBookId() {
@@ -56,4 +59,17 @@ public class BookUser {
     public Integer getQuantity() {
         return quantity;
      }
+    
+    public Double price() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getPrice() {
+        return price;
+     }
+
 }

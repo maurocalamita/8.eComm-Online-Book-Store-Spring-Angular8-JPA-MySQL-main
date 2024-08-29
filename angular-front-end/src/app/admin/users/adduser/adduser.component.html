@@ -1,15 +1,52 @@
 <h1>Add User</h1>
-<form #recievedUser="ngForm">
+<form novalidate [formGroup]="ngForm" (ngSubmit)="addUser()">
 
+  <!-- Campo per il nome -->
   <label for="name">Name</label>
-  <input type="text" class="form-control" id="name" placeholder="user name" [(ngModel)]="user.name" name="name">
+  <input type="text" id="name" class="form-control"
+         formControlName="name"
+         [ngClass]="{'is-valid': name.valid && (name.dirty || name.touched), 
+                     'is-invalid': !name.valid && (name.dirty || name.touched)}">
 
+  <div *ngIf="!name.valid && (name.dirty || name.touched)" class="error">
+    <div *ngIf="name.errors?.required">Name is required</div>
+    <div *ngIf="name.errors?.minlength">Name Minimum Length is {{ name.errors.minlength.requiredLength }}</div>
+    <div *ngIf="name.errors?.maxlength">Name Maximum Length is {{ name.errors.maxlength.requiredLength }}</div>
+  </div>
+
+  <!-- Campo per il tipo -->
   <label for="type">Type</label>
-  <input type="text" class="form-control" id="type" placeholder="type name" [(ngModel)]="user.type" name="name">
+  <select class="form-control"
+          id="type"
+          formControlName="type"
+          [ngClass]="{'is-valid': type.valid && (type.dirty || type.touched), 
+                      'is-invalid': !type.valid && (type.dirty || type.touched)}">
+    <option value="" disabled>Select designation</option>
+    <option *ngFor="let designation of userProfiles" [value]="designation.cod">
+      {{ designation.nameCod }}
+    </option>
+  </select>
+  <div *ngIf="!type.valid && (type.dirty || type.touched)" class="error">
+    <p *ngIf="type.errors?.required">Designation is required</p>
+  </div>
 
+  <!-- Campo per la password -->
   <label for="password">Password</label>
-  <input type="password" class="form-control" id="password" placeholder="password" [(ngModel)]="user.password" name="password">
+  <div class="password-container">
+    <input [type]="hidePassword ? 'password' : 'text'" id="password" class="form-control"
+           formControlName="password"
+           [ngClass]="{'is-valid': password.valid && (password.dirty || password.touched), 
+                       'is-invalid': !password.valid && (password.dirty || password.touched)}">
+    <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+      <i [class]="hidePassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+    </button>
+  </div>
+  <div *ngIf="!password.valid && (password.dirty || password.touched)" class="error">
+    <div *ngIf="password.errors?.required">Password is required</div>
+    <div *ngIf="password.errors?.minlength">Password Minimum Length is {{ password.errors.minlength.requiredLength }}</div>
+  </div>
 
-   <br>
-  <button type="button" class="btn btn-success" (click)="addUser()">Save</button>
+  <!-- Pulsante di salvataggio -->
+  <br>
+  <button type="submit" class="btn btn-success" [disabled]="!ngForm.valid">Save</button>
 </form>
