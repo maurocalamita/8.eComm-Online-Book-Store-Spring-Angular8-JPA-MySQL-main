@@ -20,6 +20,7 @@ export class ViewuserComponent implements OnInit {
   userDeletedEvent = new EventEmitter();
 
   isEditing: boolean = false; // Variabile di stato per la modalità di modifica
+  isPasswordVisible: boolean = false;
 
   constructor(private httpClientService: HttpClientService,
               private router: Router) { }
@@ -60,5 +61,13 @@ export class ViewuserComponent implements OnInit {
     // Valida i campi necessari
     return this.user.name && this.user.name.length >= 2 &&
            this.user.type && this.user.password.length >= 6;
+  }
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  get passwordType(): string {
+    return this.isPasswordVisible ? 'text' : 'password';
   }
 }

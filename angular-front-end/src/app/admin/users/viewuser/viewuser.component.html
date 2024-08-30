@@ -41,15 +41,23 @@
     <tr *ngIf="isEditing">
       <td>Password</td>
       <td>
-        <input type="password" 
-               [(ngModel)]="user.password" 
-               placeholder="Enter new password" />
+        <!-- Contenitore per il campo di input e l'icona -->
+        <div class="password-container">
+          <input [type]="passwordType" 
+                 [(ngModel)]="user.password" 
+                 placeholder="Enter new password" />
+          <!-- Icona per mostrare/nascondere la password -->
+          <i class="fa" 
+             [ngClass]="{'fa-eye': !isPasswordVisible, 'fa-eye-slash': isPasswordVisible}" 
+             (click)="togglePasswordVisibility()"></i>
+        </div>
         <!-- Messaggio di errore per Password -->
         <div *ngIf="isEditing && user.password.length < 6" class="error">
           <p>Password must be at least 6 characters long.</p>
         </div>
       </td>
     </tr>
+        
   </table>
   
   <br>
