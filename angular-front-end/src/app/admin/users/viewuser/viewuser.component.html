@@ -1,21 +1,73 @@
 <div class="userDetails">
-    <h2>User details</h2>
+  <h2>User details</h2>
+
+  <table>
+    <tr>
+      <td>User Id</td>
+      <td>{{user.id}}</td>
+    </tr>
+    <tr>
+      <td>User Name</td>
+      <td>
+        <span *ngIf="!isEditing">{{user.name}}</span>
+        <input *ngIf="isEditing" 
+               [(ngModel)]="user.name" 
+               placeholder="Enter user name" />
+        <!-- Messaggio di errore per User Name -->
+        <div *ngIf="isEditing && (!user.name || user.name.length < 2)" class="error">
+          <p>User Name is required and must be at least 3 characters long.</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Campo per la selezione del tipo di utente -->
+    <tr>
+      <td>User Type</td>
+      <td>
+        <span *ngIf="!isEditing">{{user.type}}</span>
+        <select *ngIf="isEditing" class="form-control"
+                [(ngModel)]="user.type">
+          <option value="" disabled>Select designation</option>
+          <option *ngFor="let designation of userProfiles" [value]="designation.cod">
+            {{ designation.nameCod }}
+          </option>
+        </select>
+        <!-- Messaggio di errore per User Type -->
+        <div *ngIf="isEditing && !user.type" class="error">
+          <p>User Type is required.</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Campo per la modifica della password, visibile solo in modalità editing -->
+    <tr *ngIf="isEditing">
+      <td>Password</td>
+      <td>
+        <input type="password" 
+               [(ngModel)]="user.password" 
+               placeholder="Enter new password" />
+        <!-- Messaggio di errore per Password -->
+        <div *ngIf="isEditing && user.password.length < 6" class="error">
+          <p>Password must be at least 6 characters long.</p>
+        </div>
+      </td>
+    </tr>
+  </table>
   
-    <table>
-      <tr>
-        <td>User Id</td>
-        <td>{{user.id}}</td>
-      </tr>
-      <tr>
-        <td>User Name</td>
-        <td>{{user.name}}</td>
-      </tr>
-      <tr>
-        <td>User Type</td>
-        <td>{{user.type}}</td>
-      </tr>
-  
-    </table>
-    <br>
-    <a class="btn btn-small btn-danger" (click)="deleteUser()"> delete</a>
-  </div>
+  <br>
+  <!-- Bottone per cancellare l'utente -->
+  <a class="btn btn-small btn-danger" (click)="deleteUser()">Delete</a>
+
+  <!-- Bottone per attivare la modalità di modifica -->
+  <a *ngIf="!isEditing" class="btn btn-small btn-primary" (click)="toggleEdit()">Edit</a>
+
+  <!-- Bottone per salvare le modifiche, disabilitato se la validazione non è rispettata -->
+  <a *ngIf="isEditing" 
+     class="btn btn-small btn-success"
+     [ngClass]="{'disabled': !isValid()}"
+     (click)="updateUser()"
+     [attr.aria-disabled]="!isValid() ? true : null">
+    Save
+  </a>
+
+  <!-- Bottone per annullare la modifica -->
+  <a *ngIf="isEditing" class="btn btn-small btn-secondary" (click)="toggleEdit()">Cancel</a>
+</div>

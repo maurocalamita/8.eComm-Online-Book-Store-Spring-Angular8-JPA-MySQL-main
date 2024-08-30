@@ -31,20 +31,23 @@
   </div>
 
   <!-- Campo per la password -->
-  <label for="password">Password</label>
-  <div class="password-container">
-    <input [type]="hidePassword ? 'password' : 'text'" id="password" class="form-control"
-           formControlName="password"
-           [ngClass]="{'is-valid': password.valid && (password.dirty || password.touched), 
-                       'is-invalid': !password.valid && (password.dirty || password.touched)}">
-    <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
-      <i [class]="hidePassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-    </button>
-  </div>
-  <div *ngIf="!password.valid && (password.dirty || password.touched)" class="error">
-    <div *ngIf="password.errors?.required">Password is required</div>
-    <div *ngIf="password.errors?.minlength">Password Minimum Length is {{ password.errors.minlength.requiredLength }}</div>
-  </div>
+<label for="password">Password</label>
+<div class="password-container" style="position: relative; width: 100%;">
+  <input [type]="hidePassword ? 'password' : 'text'" id="password" class="form-control"
+         formControlName="password"
+         [ngClass]="{'is-valid': password.valid && (password.dirty || password.touched), 
+                     'is-invalid': !password.valid && (password.dirty || password.touched)}"
+         style="padding-right: 30px;">
+  <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
+          style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none; cursor: pointer;">
+    <i [class]="hidePassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+  </button>
+</div>
+<div *ngIf="!password.valid && (password.dirty || password.touched)" class="error">
+  <div *ngIf="password.errors?.required">Password is required</div>
+  <div *ngIf="password.errors?.minlength">Password Minimum Length is {{ password.errors.minlength.requiredLength }}</div>
+</div>
+
 
   <!-- Pulsante di salvataggio -->
   <br>
