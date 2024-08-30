@@ -61,4 +61,8 @@ export class HttpClientService {
   putUser(id: number, userDetails: any): Observable<any> {
     return this.httpClient.put<any>(`http://localhost:8080/users/update/${id}`, userDetails);
 }
+
+getBooks1() {
+  return this.httpClient.get<Book[]>('http://localhost:8080/books/get');
+}
 }

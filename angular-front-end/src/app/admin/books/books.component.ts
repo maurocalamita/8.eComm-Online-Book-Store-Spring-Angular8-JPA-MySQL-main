@@ -25,15 +25,28 @@ export class BooksComponent implements OnInit {
   }
 
   refreshData() {
-    const params = {
-      page: 0,
-      size: 10,
-      sort: 'id',
-      order: 'DESC'
-    };
-    this.httpClientService.getBooks(params).subscribe(
-      response => this.handleSuccessfulResponse(response)
-    );
+    this.books = [];
+    this.httpClientService.getBooks1().subscribe({
+      next: (response: any) => {
+        const data = response;
+        if (data.books && data.books.length !== 0) {
+          this.books = data.books.map(book => ({
+            ...book,
+            retrievedImage: 'data:image/jpeg;base64,' + book.picByte
+          }));
+          
+        } else {
+          this.books = [];
+          
+        }
+      },
+      error: (err: any) => {
+        console.log('Error during fetching books:', err);
+      },
+      complete: () => {
+        console.log('Fetch books complete');
+      }
+    });
     this.activedRoute.queryParams.subscribe(
       (params) => {
         // get the url parameter named action. this can either be add or view.

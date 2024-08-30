@@ -40,7 +40,7 @@ public class BookController {
 	@GetMapping("/get" )
     public ResponseEntity<Object> getBooks(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(name = "size", required = false, defaultValue = "4") int size,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             @RequestParam(name = "sort", required = false, defaultValue = "id") String sort,
             @RequestParam(name = "order", required = false, defaultValue = "DESC") String order) {
 
