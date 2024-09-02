@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
 import { UsersComponent } from './admin/users/users.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AdduserComponent } from './admin/users/adduser/adduser.component';
 import { ViewuserComponent } from './admin/users/viewuser/viewuser.component';
 import { BooksComponent } from './admin/books/books.component';
@@ -17,6 +17,8 @@ import { ErrorComponent } from './error/error.component';
 import { CartComponent } from './cart/cart.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoginComponent } from './login/login.component';
+import { GlobalHttpInterceptorService } from './error/global.interceptor';
+import { HttpClientService } from './service/http-client.service';
 
 
 @NgModule({
@@ -42,7 +44,7 @@ import { LoginComponent } from './login/login.component';
     ReactiveFormsModule,
     NgxPaginationModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: GlobalHttpInterceptorService, multi: true  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

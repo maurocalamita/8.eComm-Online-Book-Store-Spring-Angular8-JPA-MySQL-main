@@ -6,12 +6,14 @@ import { ShopbookComponent } from './shopbook/shopbook.component';
 import { ErrorComponent } from './error/error.component';
 import { CartComponent } from './cart/cart.component';
 import { LoginComponent } from './login/login.component';
+import { UserGuard } from './user.guard';
+import { BookGuard } from './book.guard';
 
 
 
 const routes: Routes = [
-  { path: 'admin/users', component: UsersComponent },
-  { path: 'admin/books', component: BooksComponent },
+  { path: 'admin/users', component: UsersComponent ,canActivate: [UserGuard] },
+  { path: 'admin/books', component: BooksComponent,canActivate: [BookGuard] },
   { path: 'shop', component: ShopbookComponent },
   { path: 'cart', component: CartComponent },
   { path: 'login' , component: LoginComponent},

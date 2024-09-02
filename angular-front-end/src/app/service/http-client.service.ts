@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { User } from '../model/User ';
 import { Book } from '../model/Book';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -69,4 +69,6 @@ getBooks1() {
 login(user: User): Observable<User>{
   return this.httpClient.post<User>(`http://localhost:8080/users/login`, user, {headers: new HttpHeaders({'Content-Type': 'application/json'})});
 }
+
+ 
 }
