@@ -55,15 +55,22 @@ export class ShopbookComponent implements OnInit {
       .set('size', String(this.productPage))
       .set('sort', this.sortField)
       .set('order', this.sortOrder);
-
+  
     this.httpClientService.getBooks(params).subscribe({
       next: (response: any) => {
         const data = response;
         if (data.books && data.books.length !== 0) {
-          this.books = data.books.map(book => ({
-            ...book,
-            retrievedImage: 'data:image/jpeg;base64,' + book.picByte
-          }));
+          this.books = data.books.map(book => {
+            const priceValue = parseFloat(book.price);
+            const discountValue = parseFloat(book.discount);
+            const finalPrice = discountValue > 0 ? priceValue - (priceValue * discountValue / 100) : priceValue;
+            
+            return {
+              ...book,
+              retrievedImage: 'data:image/jpeg;base64,' + book.picByte,
+              finalPrice: finalPrice  // Aggiungi il prezzo finale calcolato
+            };
+          });
           this.totalBooks = data.totalItems;
         } else {
           this.books = [];
@@ -78,6 +85,7 @@ export class ShopbookComponent implements OnInit {
       }
     });
   }
+  
 
   loadCart() {
     const data = localStorage.getItem('cart');
@@ -105,7 +113,7 @@ export class ShopbookComponent implements OnInit {
         this.cartBooks.push({
           id: book.id,
           name: book.name,
-          price: book.price,
+          price: book.finalPrice, // Use final price here
           quantity: quantity,
           retrievedImage: book.retrievedImage
         });
@@ -142,23 +150,30 @@ export class ShopbookComponent implements OnInit {
   onSearch() {
     this.isLoading = false;
     const searchTerm = this.myForm.get('searchTerm').value;
-   
-      this.httpClientService.searchProducts(searchTerm).subscribe({
-        next: (data: Book[]) => {
-          this.books = data.map(book => ({
+  
+    this.httpClientService.searchProducts(searchTerm).subscribe({
+      next: (data: Book[]) => {
+        this.books = data.map(book => {
+          const priceValue = parseFloat(book.price.toString()); // Assicurati che price sia trattato come numero
+          const discountValue = parseFloat(book.discount.toString()); // Assicurati che discount sia trattato come numero
+          const finalPrice = discountValue > 0 ? priceValue - (priceValue * discountValue / 100) : priceValue;
+  
+          return {
             ...book,
-            retrievedImage: 'data:image/jpeg;base64,' + book.picByte
-          }));
-        },
-        error: (err: any) => {
-          console.log('Error during search:', err);
-        },
-        complete: () => {
-          console.log('Search complete');
-        },
-      });
-    
+            retrievedImage: 'data:image/jpeg;base64,' + book.picByte,
+            finalPrice: finalPrice  // Aggiungi il prezzo finale calcolato
+          };
+        });
+      },
+      error: (err: any) => {
+        console.log('Error during search:', err);
+      },
+      complete: () => {
+        console.log('Search complete');
+      },
+    });
   }
+  
 
   onReset() {
     this.isLoading = true;
@@ -175,6 +190,19 @@ export class ShopbookComponent implements OnInit {
   renderPage(event: number) {
     this.pagination = event - 1;
     this.getAllBooks();
+}
+
+calculateFinalPrice(price: string, discount: string): string {
+  try {
+    const priceValue = parseFloat(price);
+    const discountValue = parseFloat(discount);
+
+    const finalPrice = priceValue - (priceValue * discountValue / 100);
+    return finalPrice.toFixed(2);
+  } catch (error) {
+    console.error('Error calculating final price:', error);
+    return price; // Return original price in case of error
+  }
 }
   
 }

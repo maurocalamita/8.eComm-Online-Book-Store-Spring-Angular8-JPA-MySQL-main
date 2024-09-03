@@ -93,6 +93,10 @@ public class BookController {
 	            book.setPicByte(existingBook.getPicByte());
 	        }
 	    }
+	    
+	 // Calcola e imposta il prezzo finale scontato
+	    book.updateFinalPrice();
+	    
 	    Book updatedBook = bookRepository.save(book);
 	    return new ResponseEntity<>(updatedBook, HttpStatus.OK);
 	}
@@ -114,4 +118,22 @@ public class BookController {
 	        return ResponseEntity.ok("Product added to order successfully");
 	    }
 	    */
+	
+	@GetMapping("/calculateFinalPrice")
+    public String calculateFinalPrice(@RequestParam(value = "price") String price, @RequestParam(value = "discount") String discount) {
+        try {
+            // Convert price and sconto from String to double
+            double priceValue = Double.parseDouble(price);
+            double discountValue = Double.parseDouble(discount);
+
+            // Calculate the final price after discount
+            double finalPrice = priceValue - (priceValue * discountValue / 100);
+
+            // Return the final price formatted as a string
+            return String.format("%.2f", finalPrice);
+        } catch (NumberFormatException e) {
+            // Handle the case where price or sconto is not a valid number
+            return "Error calculating final price: Invalid price or discount format";
+        }
+    }
 }

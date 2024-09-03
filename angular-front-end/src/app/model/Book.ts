@@ -7,4 +7,8 @@ export class Book {
     retrievedImage: string; 
     isAdded: boolean;
     quantity: number;
+    discount: number;
+    dataInizio: Date;
+    dataFine: Date;
+    finalPrice?: number;
     }
