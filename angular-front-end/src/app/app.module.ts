@@ -19,6 +19,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { LoginComponent } from './login/login.component';
 import { GlobalHttpInterceptorService } from './error/global.interceptor';
 import { HttpClientService } from './service/http-client.service';
+import { BooksMarkComponent } from './marketing/books-edit-discount/books.edit.component';
+import { ShowBookComponent } from './marketing/books-edit-discount/show.details.component';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import { HttpClientService } from './service/http-client.service';
     ShopbookComponent,
     ErrorComponent,
     CartComponent,
-    LoginComponent
+    LoginComponent,
+    BooksMarkComponent,
+    ShowBookComponent
   ],
   imports: [
     BrowserModule,

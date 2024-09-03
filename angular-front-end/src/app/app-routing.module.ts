@@ -8,6 +8,8 @@ import { CartComponent } from './cart/cart.component';
 import { LoginComponent } from './login/login.component';
 import { UserGuard } from './user.guard';
 import { BookGuard } from './book.guard';
+import { BooksMarkComponent } from './marketing/books-edit-discount/books.edit.component';
+import { ShowBookComponent } from './marketing/books-edit-discount/show.details.component';
 
 
 
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'shop', component: ShopbookComponent },
   { path: 'cart', component: CartComponent },
   { path: 'login' , component: LoginComponent},
+  { path: 'mark/books' , component: BooksMarkComponent},
+  { path: 'mark/books/details' , component: ShowBookComponent},
   { path: '', redirectTo: 'shop', pathMatch: 'full' },
   { path: '**', component: ErrorComponent }
 ];
