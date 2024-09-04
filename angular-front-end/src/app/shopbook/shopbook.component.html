@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-md-4">
                   <strong>${{item.price | number: '1.2-2'}}</strong> x 
-                  <input type="number" [(ngModel)]="item.quantity" min="1" style="width: 60px;"/>
+                  <input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateCartItemQuantity(item.id, $event)" min="1" style="width: 60px;"/>
                 </div>
                 <div class="col-md-4">
                   <button class="btn btn-danger btn-sm" (click)="removeFromCart(item.id)">Remove</button>

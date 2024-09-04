@@ -204,5 +204,13 @@ calculateFinalPrice(price: string, discount: string): string {
     return price; // Return original price in case of error
   }
 }
+
+updateCartItemQuantity(itemId: number, newQuantity: number) {
+  const item = this.cartBooks.find(book => book.id === itemId);
+  if (item) {
+    item.quantity = newQuantity;
+    this.updateCartData();
+  }
+}
   
 }
