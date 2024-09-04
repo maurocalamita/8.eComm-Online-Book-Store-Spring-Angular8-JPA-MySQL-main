@@ -1,25 +1,49 @@
 <h1>Book Details</h1>
 
-    <table>
-        <tr>
-            <td>Book Id</td>
-            <td>{{book.id}}</td>
-        </tr>
-        <tr>
-            <td>Book Name</td>
-            <td>{{book.name}}</td>
-        </tr>
-        <tr>
-            <td>Book Author</td>
-            <td>{{book.author}}</td>
-        </tr>
-        <tr>
-            <td>Book Price</td>
-            <td>{{book.price}}</td>
-        </tr>
-    </table>
-    <br>
-    <img src="{{book.retrievedImage}}" height="200" width="200">
-    <br><br>
-    <a class="btn btn-small btn-warning" (click)="editBook()">edit</a>  
-   
+<table>
+    <tr>
+        <td>ID</td>
+        <td>{{ book.id }}</td>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td>{{ book.name }}</td>
+    </tr>
+    <tr>
+        <td>Author</td>
+        <td>{{ book.author }}</td>
+    </tr>
+    <tr>
+        <td>Price</td>
+        <td>{{ book.price }}</td>
+    </tr>
+    <tr>
+        <td>Sconto (%)</td>
+        <td *ngIf="!isEditing">{{ book.discount }}</td>
+        <td *ngIf="isEditing">
+            <input [(ngModel)]="book.discount" type="number" min="0" max="100" />
+        </td>
+    </tr>
+    <tr>
+        <td>Data Inizio</td>
+        <td *ngIf="!isEditing">{{ book.dataInizio | date: 'yyyy-MM-dd HH:mm' }}</td>
+        <td *ngIf="isEditing">
+            <input [(ngModel)]="book.dataInizio" type="datetime-local" />
+        </td>
+    </tr>
+    <tr>
+        <td>Data Fine</td>
+        <td *ngIf="!isEditing">{{ book.dataFine | date: 'yyyy-MM-dd HH:mm' }}</td>
+        <td *ngIf="isEditing">
+            <input [(ngModel)]="book.dataFine" type="datetime-local" />
+        </td>
+    </tr>
+</table>
+<br>
+<img [src]="book.retrievedImage" height="200" width="200">
+<br><br>
+
+<!-- Il pulsante "Edit" si alterna tra "Modifica" e "Salva" -->
+<a class="btn btn-small btn-warning" (click)="toggleEdit()">
+    {{ isEditing ? 'Salva' : 'Modifica Sconto e Date' }}
+</a>

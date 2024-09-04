@@ -29,7 +29,7 @@
                   <span>{{ (item.name | slice: 0: 10) + (item.name.length > 10 ? '...' : '') }}</span>
                 </div>
                 <div class="col-md-4">
-                  <strong>${{item.price}}</strong> x 
+                  <strong>${{item.price | number: '1.2-2'}}</strong> x 
                   <input type="number" [(ngModel)]="item.quantity" min="1" style="width: 60px;"/>
                 </div>
                 <div class="col-md-4">
@@ -38,7 +38,7 @@
               </div>
             </li>
             <hr>
-            <li><strong>Total: ${{getTotalPrice()}}</strong></li>
+            <li><strong>Total: ${{getTotalPrice() | number: '1.2-2'}}</strong></li>
             <li><a class="btn btn-small btn-success" role="button" (click)="goToCart()">View Cart</a></li>
             <br>
             <li *ngIf="cartBooks.length > 0">
@@ -64,9 +64,9 @@
           <span *ngIf="book.discount > 0" style="text-decoration: line-through; color: grey;">${{ book.price }}</span>
           <br>
           <!-- Show discounted price -->
-          <strong *ngIf="book.discount > 0" style="color: red;">${{ book.finalPrice }}</strong>
+          <strong *ngIf="book.discount > 0" style="color: red;">${{ book.finalPrice | number: '1.2-2' }}</strong>
           <!-- Show original price if no discount -->
-          <strong *ngIf="book.discount <= 0">${{ book.price }}</strong>
+          <strong *ngIf="book.discount <= 0">${{ book.price | number: '1.2-2' }}</strong>
           <!-- Show discount percentage -->
           <span *ngIf="book.discount > 0" style="color: green; font-size: 14px;"> ({{ book.discount }}% off)</span>
         </p>

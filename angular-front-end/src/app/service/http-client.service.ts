@@ -70,5 +70,4 @@ login(user: User): Observable<User>{
   return this.httpClient.post<User>(`http://localhost:8080/users/login`, user, {headers: new HttpHeaders({'Content-Type': 'application/json'})});
 }
 
- 
 }
