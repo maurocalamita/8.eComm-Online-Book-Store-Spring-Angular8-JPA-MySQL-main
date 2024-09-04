@@ -24,7 +24,7 @@ export class ShowBookComponent implements OnInit {
 
   ngOnInit() {
     this.checkDiscountValidity();
-    setInterval(() => this.checkDiscountValidity(), 60 * 60 * 1000); // Controllo ogni ora
+    setInterval(() => this.checkDiscountValidity(), 60 * 1000); // Controllo ogni minuto
   }
 
 
@@ -54,6 +54,8 @@ export class ShowBookComponent implements OnInit {
 
     if (currentDate > endDate && this.book.discount > 0) {
       this.book.discount = 0;
+      this.book.dataInizio = null;
+      this.book.dataFine = null;
       this.saveChanges(); // Aggiorna il libro nel database rimuovendo lo sconto
     }
   }
