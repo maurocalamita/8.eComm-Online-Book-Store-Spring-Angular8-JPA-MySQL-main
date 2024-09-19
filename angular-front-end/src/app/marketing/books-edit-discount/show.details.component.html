@@ -28,14 +28,14 @@
         <td>Data Inizio</td>
         <td *ngIf="!isEditing">{{ book.dataInizio | date: 'yyyy-MM-dd HH:mm' }}</td>
         <td *ngIf="isEditing">
-            <input [(ngModel)]="book.dataInizio" type="datetime-local" />
+            <input [(ngModel)]="book.dataInizio" type="datetime-local" [min]="today" (change)="updateMinEndDate()" />
         </td>
     </tr>
     <tr>
         <td>Data Fine</td>
         <td *ngIf="!isEditing">{{ book.dataFine | date: 'yyyy-MM-dd HH:mm' }}</td>
         <td *ngIf="isEditing">
-            <input [(ngModel)]="book.dataFine" type="datetime-local" />
+            <input [(ngModel)]="book.dataFine" type="datetime-local" [min]="minEndDate" />
         </td>
     </tr>
 </table>

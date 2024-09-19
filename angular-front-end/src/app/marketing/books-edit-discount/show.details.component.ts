@@ -17,16 +17,44 @@ export class ShowBookComponent implements OnInit {
   bookDeletedEvent = new EventEmitter();
 
   isEditing = false;
+  today: string;
+  minEndDate: string;
 
 
   constructor(private httpClientService: HttpClientService, private router: Router
     ) { }
 
   ngOnInit() {
+    this.setToday();
+    this.updateMinEndDate();
     this.checkDiscountValidity();
     setInterval(() => this.checkDiscountValidity(), 60 * 1000); // Controllo ogni minuto
+   
   }
 
+  setToday() {
+    const now = new Date();
+    this.today = this.formatDate(now); // Formattazione per 'datetime-local'
+  }
+
+  // Formatta una data nel formato 'yyyy-MM-ddTHH:mm' per compatibilità con 'datetime-local'
+  formatDate(date: Date): string {
+    // Ottieni la data in formato UTC
+    const utcDate = new Date(date.toISOString());
+    // Converti UTC in ora locale
+    const localDate = new Date(utcDate.getTime() - (utcDate.getTimezoneOffset() * 60000));
+    return localDate.toISOString().slice(0, 16);
+  }
+
+  // Quando l'utente cambia la data di inizio, aggiorna la data minima per la fine
+  updateMinEndDate() {
+    if (this.book.dataInizio) {
+      const dataInizio = new Date(this.book.dataInizio);
+      this.minEndDate = this.formatDate(dataInizio); // Imposta data di inizio come minimo per la fine
+    } else {
+      this.minEndDate = this.today; // Se non c'è data di inizio, usa la data corrente
+    }
+  }
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
