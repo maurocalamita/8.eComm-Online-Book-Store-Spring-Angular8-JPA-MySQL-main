@@ -49,10 +49,18 @@ export class HttpClientService {
      
   }
 
-  addBookUser(userId, bookId, quantity) {
-    const headers = { 'content-type': 'application/json' }
-    return this.httpClient.post<any>(`http://localhost:8080/user-books/add?userId=${userId}&bookId=${bookId}&quantity=${quantity}`, {headers});   
+  addBookUser(orderId:number, bookId: number, quantity: string, price: string) {
+    const headers = { 'Content-Type': 'application/json' };
+    let params = new HttpParams()
+    
+    .set('orderId', orderId.toString())
+    .set('price', price)
+    .set('bookId', bookId.toString())
+    .set('quantity', quantity)
+    
+    return this.httpClient.post<any>(`http://localhost:8080/order-books/add`, {}, { headers , params });
   }
+  
 
   getType(): Observable<any[]> {
     return this.httpClient.get<any[]>(`http://localhost:8080/type/get`);
@@ -68,6 +76,17 @@ getBooks1() {
 
 login(user: User): Observable<User>{
   return this.httpClient.post<User>(`http://localhost:8080/users/login`, user, {headers: new HttpHeaders({'Content-Type': 'application/json'})});
+}
+
+getIdOrder(userId: number) : Observable <any> {
+    return this.httpClient.get<any>(`http://localhost:8080/orders/${userId}`);
+
+}
+createOrder(name: string)  : Observable <any> {
+  const headers = { 'Content-Type': 'application/json' };
+  let params = new HttpParams().set('name', name);
+
+  return this.httpClient.post<any>(`http://localhost:8080/orders/add-order`,{},{ headers , params });
 }
 
 }

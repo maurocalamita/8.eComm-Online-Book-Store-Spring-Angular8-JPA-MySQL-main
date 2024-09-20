@@ -83,5 +83,18 @@ public class OrderBookController {
                     .body("An error occurred while saving the order book: " + e.getMessage());
         }
     }
+    
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<?> viewOrderBookByOrderId(@PathVariable("orderId") Long orderId) {
+        // Cerca tutti gli OrderBook che corrispondono a orderId
+        List<OrderBook> orderBooks = orderBookRepository.findByOrderId(orderId);
+
+        if (orderBooks.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No OrderBooks found for the given orderId.");
+        }
+
+        // Restituisce la lista di OrderBook
+        return ResponseEntity.ok(orderBooks);
+    }
 
 }

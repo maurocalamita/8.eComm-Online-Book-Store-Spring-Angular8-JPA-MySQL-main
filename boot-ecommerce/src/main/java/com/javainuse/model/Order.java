@@ -13,7 +13,7 @@ public class Order {
 
     
     @Column(name = "name", nullable = false)
-    private Long name;
+    private String name;
 
 
 	public Long getId() {
@@ -26,12 +26,12 @@ public class Order {
 	}
 
 
-	public Long getName() {
+	public String getName() {
 		return name;
 	}
 
 
-	public void setName(Long name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
